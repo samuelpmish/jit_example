@@ -8,6 +8,8 @@ find_package(Clang REQUIRED clangTooling libClang clangASTMatchers)
 
 add_executable(main main.cpp)
 
+target_precompile_headers(main PUBLIC pch.hpp)
+
 target_link_libraries(main PUBLIC
   clangAST
   clangBasic
@@ -16,3 +18,6 @@ target_link_libraries(main PUBLIC
   clangSema
 )
 
+#get_property(idirs TARGET main PROPERTY )
+
+message(STATUS "Interface include directory for main: ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES}")

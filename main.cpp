@@ -34,6 +34,8 @@
 #include <memory>
 #include <iostream>
 
+//#include "JIT.hpp"
+
 using namespace llvm;
 using namespace clang;
 using namespace llvm::orc;
@@ -48,6 +50,11 @@ extern "C" void hello() {
 }
 )";
 
+const char noop_program[] = 
+R"(
+extern "C" void noop() {}
+)";
+
 const char add1_program[] = 
 R"(
 extern "C" double add1(double x) {
@@ -55,10 +62,8 @@ extern "C" double add1(double x) {
 }
 )";
 
-int main(int argc, char *argv[]) {
+int main() {
 
-  // Initialize LLVM.
-  InitLLVM X(argc, argv);
   InitializeNativeTarget();
   InitializeNativeTargetAsmPrinter();
 
@@ -71,57 +76,16 @@ int main(int argc, char *argv[]) {
   auto Interp = llvm::cantFail(Interpreter::create(std::move(CI)));
   
   std::cout << "parsing program" << std::endl;
-
-#if 1
-  PartialTranslationUnit & PTU = llvm::cantFail(Interp->Parse(add1_program));
-  
-  std::cout << "checking that add1() function exists" << std::endl;
-  assert(PTU.TheModule->getFunction("add1"));
+  llvm::cantFail(Interp->ParseAndExecute(add1_program));
 
   std::cout << "get symbol address" << std::endl;
-  auto add1_address = ExitOnErr(Interp->getSymbolAddress("_add1"));
+  auto add1_address = ExitOnErr(Interp->getSymbolAddress("add1"));
 
   std::cout << "convert to function pointer" << std::endl;
   double (*add1)(double) = jitTargetAddressToFunction< double(*)(double) >(add1_address);
 
   std::cout << "calling add1(3.0)" << std::endl;
   std::cout << add1(3.0) << std::endl;
-
-//  // Create an LLJIT instance.
-//  auto J = ExitOnErr(LLJITBuilder().create());
-//
-//  auto Context = std::make_unique<LLVMContext>();
-//  ThreadSafeModule ts_module(std::move(PTU.TheModule), std::move(Context));
-//
-//  ExitOnErr(J->addIRModule(std::move(ts_module)));
-//
-//  std::cout << "look up JIT'd function" << std::endl;
-//  auto add1_fn = ExitOnErr(J->lookup("add1"));
-//  double (*add1)(double) = add1_fn.toPtr<double(double)>();
-//
-//  std::cout << "calling add1(3.0)" << std::endl;
-//  std::cout << add1(3.0) << std::endl;
-#else
-  PartialTranslationUnit & PTU = llvm::cantFail(Interp->Parse(hello_program));
-  
-  std::cout << "checking that hello() function exists" << std::endl;
-  assert(PTU.TheModule->getFunction("hello"));
-
-  // Create an LLJIT instance.
-  auto J = ExitOnErr(LLJITBuilder().create());
-
-  auto Context = std::make_unique<LLVMContext>();
-  ThreadSafeModule ts_module(std::move(PTU.TheModule), std::move(Context));
-
-  ExitOnErr(J->addIRModule(std::move(ts_module)));
-
-  std::cout << "look up JIT'd function" << std::endl;
-  auto hello_fn = ExitOnErr(J->lookup("hello"));
-  void (*hello)() = hello_fn.toPtr<void()>();
-
-  hello();
-
-#endif
-  
+ 
   return 0;
 }
