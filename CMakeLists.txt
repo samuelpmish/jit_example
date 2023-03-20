@@ -6,11 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 #find_package(LLVM)
 find_package(Clang REQUIRED clangTooling libClang clangASTMatchers)
 
-add_executable(main main.cpp JIT.cpp)
-
-target_precompile_headers(main PUBLIC pch.hpp)
-
-target_link_libraries(main PUBLIC
+add_library(jit STATIC JIT.hpp JIT.cpp)
+target_precompile_headers(jit PRIVATE pch.hpp)
+target_link_libraries(jit PUBLIC
   clangAST
   clangBasic
   clangInterpreter
@@ -18,6 +16,10 @@ target_link_libraries(main PUBLIC
   clangSema
 )
 
-#get_property(idirs TARGET main PROPERTY )
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE jit)
+add_executable(perf perf.cpp)
+target_link_libraries(perf PRIVATE jit)
 
-message(STATUS "Interface include directory for main: ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES}")
+
+

@@ -43,12 +43,13 @@ JIT::JIT(std::vector< std::string > clang_flags) {
     "-Xclang", "-emit-llvm-only"
   };
 
-  for (auto flag : clang_flags) {
+  for (const auto & flag : clang_flags) {
     flags.push_back(flag.c_str());
   }
 
   auto CI = llvm::cantFail(IncrementalCompilerBuilder::create(flags));
   interpreter = llvm::cantFail(Interpreter::create(std::move(CI)));
+
 }
 
 JIT::~JIT(){}
