@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 #find_package(LLVM)
 find_package(Clang REQUIRED clangTooling libClang clangASTMatchers)
 
-add_executable(main main.cpp)
+add_executable(main main.cpp JIT.cpp)
 
 target_precompile_headers(main PUBLIC pch.hpp)
 
