@@ -66,6 +66,8 @@ int main() {
   stopwatch.stop();
   std::cout << answer << " " << stopwatch.elapsed() << std::endl;
 
+  // it looks like the compiler is just optimizing away this entire
+  // test, so the timings are not meaningful
   std::cout << "calling aot sum(100000)" << std::endl;
   stopwatch.start();
   answer = sum(100000);
