@@ -4,10 +4,7 @@
 
 int main() {
 
-  JIT jit({
-    "-arch", "arm64",
-    "-isysroot", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-  });
+  JIT jit({/* compilation flags */});
 
   std::cout << "parsing function template" << std::endl;
   jit.compile(R"(

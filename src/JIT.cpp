@@ -40,7 +40,10 @@ JIT::JIT(std::vector< std::string > clang_flags) {
   }
 
   std::vector<const char *> flags = {
-    "-Xclang", "-emit-llvm-only"
+    "-march=native", "-Xclang", "-emit-llvm-only", 
+    #ifdef __APPLE__
+    "-isystem", "/opt/local/lib/clang/16/include",
+    #endif
   };
 
   for (const auto & flag : clang_flags) {

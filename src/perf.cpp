@@ -30,11 +30,7 @@ int main() {
   std::vector< double > values(10000, 1.0);
   timer stopwatch;
 
-  JIT debug_jit({
-    "-O0", "-g",
-    "-isystem", "/opt/local/lib/clang/16/include",
-    "-isysroot", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk"
-  });
+  JIT debug_jit({"-O0", "-g"});
 
   std::cout << "compiling unoptimized function" << std::endl;
   debug_jit.compile(func);
@@ -48,11 +44,7 @@ int main() {
   stopwatch.stop();
   std::cout << answer << " " << stopwatch.elapsed() << std::endl;
 
-  JIT opt_jit({
-    "-O3",
-    "-isystem", "/opt/local/lib/clang/16/include",
-    "-isysroot", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk"
-  });
+  JIT opt_jit({"-O3"});
 
   std::cout << "compiling unoptimized function" << std::endl;
   opt_jit.compile(func);
@@ -63,14 +55,6 @@ int main() {
   std::cout << "calling optimized sum(100000)" << std::endl;
   stopwatch.start();
   answer = opt_func(100000);
-  stopwatch.stop();
-  std::cout << answer << " " << stopwatch.elapsed() << std::endl;
-
-  // it looks like the compiler is just optimizing away this entire
-  // test, so the timings are not meaningful
-  std::cout << "calling aot sum(100000)" << std::endl;
-  stopwatch.start();
-  answer = sum(100000);
   stopwatch.stop();
   std::cout << answer << " " << stopwatch.elapsed() << std::endl;
 

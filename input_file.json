@@ -1,0 +1,3 @@
+{
+  "body_force" : "vec3 body_force(vec3 x) { return x * 2.0; }"
+}

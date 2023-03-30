@@ -21,3 +21,6 @@ target_link_libraries(main PRIVATE jit)
 
 add_executable(perf src/perf.cpp)
 target_link_libraries(perf PRIVATE jit)
+
+add_executable(input_file src/input_file.cpp)
+target_link_libraries(input_file PRIVATE jit)
