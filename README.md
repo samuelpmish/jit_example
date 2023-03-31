@@ -28,10 +28,7 @@ cmake --build build --parallel
 1. The `JIT` constructor takes a list of compiler flags to be passed to the `clang-repl` interpreter:
 ```cpp
   // flags for an M1 mac
-  JIT jit({
-    "-arch", "arm64",
-    "-isysroot", "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
-  });
+  JIT jit({"-O3"});
 ```
 TODO: see if I can get some of these default flags from CMake, so the user doesn't have to include
       platform-specific flags in their sources
