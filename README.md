@@ -21,7 +21,9 @@ cmake . -B build -DCMAKE_BUILD_TYPE=Release < other flags >
 cmake --build build --parallel
 ```
 
-# Overview
+# Examples
+
+## 1. Function template instantiation
 
 [main.cpp](https://github.com/samuelpmish/jit_sandbox/blob/main/src/main.cpp) shows a basic example of how to use the `JIT` class that wraps `clang-repl`
 
@@ -69,3 +71,14 @@ notes:
   fail at runtime)
 - function lookup is done by mangled name. Wrapping functions definitions in the interpreter with `extern "C"`
   makes lookup easier.
+
+## 2. Optimization flags
+
+[perf.cpp](https://github.com/samuelpmish/jit_sandbox/blob/main/src/perf.cpp) shows that passing optimization/architecture
+compilation flags works just like `clang`. Functions compiled in the interpreter with `-O3` perform better than those with `-O0`.
+
+## 3. Mixing AoT and JiT compilation
+
+[input_file.cpp](https://github.com/samuelpmish/jit_sandbox/blob/main/src/input_file.cpp) shows an example of
+compiling code defined in an auxiliary `json` file that is read at runtime. This allows for users to customize
+the execution of a program without recompiling it.
