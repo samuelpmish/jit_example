@@ -27,7 +27,6 @@ cmake --build build --parallel
 
 1. The `JIT` constructor takes a list of compiler flags to be passed to the `clang-repl` interpreter:
 ```cpp
-  // flags for an M1 mac
   JIT jit({"-O3"});
 ```
 TODO: see if I can get some of these default flags from CMake, so the user doesn't have to include
