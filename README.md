@@ -29,8 +29,6 @@ cmake --build build --parallel
 ```cpp
   JIT jit({"-O3"});
 ```
-TODO: see if I can get some of these default flags from CMake, so the user doesn't have to include
-      platform-specific flags in their sources
       
 --------
 
