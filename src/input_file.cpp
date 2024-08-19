@@ -13,7 +13,7 @@ std::string externC(std::string str) {
 }
 
 int main() {
-  JIT jit({"-I", "/Users/sam/code/sandbox/jit/include"});
+  JIT jit({"-I", "/Users/sam/code/jit_example/include"});
 
   jit.compile("#include \"vec3.hpp\"");
 

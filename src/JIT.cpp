@@ -31,7 +31,7 @@ using namespace llvm::orc;
 
 bool initialized = false;
 
-JIT::JIT(std::vector< std::string > clang_flags) {
+JIT::JIT(const std::vector< std::string > & clang_flags) {
 
   if (!initialized) {
     InitializeNativeTarget();
@@ -41,8 +41,16 @@ JIT::JIT(std::vector< std::string > clang_flags) {
 
   std::vector<const char *> flags = {
     "-march=native", "-Xclang", "-emit-llvm-only", 
+    //"-stdlib=libc++",
     #ifdef __APPLE__
-    "-isystem", "/opt/local/lib/clang/16/include",
+    "-isystem", 
+    //"/opt/local/lib/clang/16/include",
+    "/opt/homebrew/opt/llvm/lib/clang/18/include",
+
+    "-isysroot",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+    //"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.4.sdk",
+    //"-mmacosx-version-min=14.3"
     #endif
   };
 
@@ -50,7 +58,10 @@ JIT::JIT(std::vector< std::string > clang_flags) {
     flags.push_back(flag.c_str());
   }
 
-  auto CI = llvm::cantFail(IncrementalCompilerBuilder::create(flags));
+  IncrementalCompilerBuilder builder;
+  builder.SetCompilerArgs(flags);
+
+  auto CI = llvm::cantFail(builder.CreateCpp());
   interpreter = llvm::cantFail(Interpreter::create(std::move(CI)));
 
 }
@@ -61,6 +72,6 @@ void JIT::compile(std::string code) {
   llvm::cantFail(interpreter->ParseAndExecute(code.c_str()));
 }
 
-uint64_t JIT::lookup_function_addr(std::string func_name) {
+llvm::orc::ExecutorAddr JIT::lookup_function_addr(std::string func_name) {
   return llvm::cantFail(interpreter->getSymbolAddress(func_name.c_str()));
 }
