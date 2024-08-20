@@ -2,7 +2,7 @@
 playing with `clang-repl` and `ORC`
 
 # Build
-This depends on llvm 16.0 with the `clang-tools-extra` project enabled. llvm was built with the following configure arguments:
+This depends on llvm 18.0 with the `clang-tools-extra` project enabled. llvm was built with the following configure arguments:
 
 ```
 cmake -G Ninja                                              \
