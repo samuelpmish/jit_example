@@ -1,5 +1,7 @@
 # JIT sandbox
-playing with `clang-repl` and `ORC`
+playing with `clang-repl` and `ORC`.
+
+Note: this project is not meant for use in production, it was intended to prototype JIT compilation. Right now, the compilation flags from CMake are not being propagated into the `JIT` class, so users currently have to specify certain include directories manually.
 
 # Build
 This depends on llvm 18.0 with the `clang-tools-extra` project enabled. llvm was built with the following configure arguments:
